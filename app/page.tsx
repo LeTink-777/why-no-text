@@ -1,6 +1,7 @@
 import { Brain, Eye, MessageCircleOff, Timer } from "lucide-react";
 import { PhoneScreen } from "@/components/PhoneScreen";
 import { QuizForm } from "@/components/QuizForm";
+import { Faq } from "@/components/Faq";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SITE } from "@/lib/site";
 import { REASONS } from "@/lib/content";
@@ -108,6 +109,7 @@ export default function HomePage() {
             {SITE.owner.fullName}. ИНН {SITE.owner.inn}. {SITE.owner.status}.
           </p>
         </section>
+        <Faq />
       </main>
       <SiteFooter />
     </>

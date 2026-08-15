@@ -18,6 +18,23 @@ interface CreatePaymentBody {
   email?: unknown;
   name?: unknown;
   context?: unknown;
+  /** The visitor's form answers, echoed back by the webhook into the PDF. */
+  answers?: unknown;
+}
+
+/** YooKassa allows at most 16 metadata keys with values up to 512 chars. */
+const METADATA_RESERVED_KEYS = 6;
+
+function pickAnswers(value: unknown): Record<string, string> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  const out: Record<string, string> = {};
+  for (const [key, entry] of Object.entries(value as Record<string, unknown>)) {
+    if (Object.keys(out).length >= 16 - METADATA_RESERVED_KEYS) break;
+    // email and name already have dedicated metadata keys.
+    if (key === "email" || key === "name") continue;
+    if (typeof entry === "string" && entry) out[key.slice(0, 32)] = entry.slice(0, 500);
+  }
+  return out;
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -63,6 +80,7 @@ export async function POST(request: Request) {
   const plan = PLANS[planId];
   const customerName = asString(body.name, 120);
   const context = asString(body.context, 240);
+  const answers = pickAnswers(body.answers);
 
   const origin = new URL(request.url).origin;
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || origin || SITE.url;
@@ -75,13 +93,16 @@ export async function POST(request: Request) {
     capture: true,
     description: trim128(`${SITE.productName}. ${plan.yooDescription}`),
     confirmation: { type: "redirect", return_url: returnUrl },
+    // The webhook reads userEmail/userName/plan back out of here to build and
+    // send the result, so anything delivery needs must be stored on the payment.
     metadata: {
       plan: plan.id,
       plan_name: plan.name,
       site: SITE.domain,
-      email,
-      ...(customerName ? { customer_name: customerName } : {}),
+      userEmail: email,
+      userName: customerName,
       ...(context ? { context } : {}),
+      ...answers,
     },
   };
 

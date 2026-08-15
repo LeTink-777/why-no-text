@@ -7,7 +7,8 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/thanks"],
+        // /result and /thanks are per-visitor pages with no standalone value.
+        disallow: ["/result", "/thanks", "/api/"],
       },
     ],
     sitemap: `${SITE.url}/sitemap.xml`,
