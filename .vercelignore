@@ -1,0 +1,8 @@
+# Local-only files. Production values come from the project's Environment
+# Variables in Vercel, never from an uploaded env file.
+.env
+.env.local
+.env.*.local
+.git
+.next
+node_modules

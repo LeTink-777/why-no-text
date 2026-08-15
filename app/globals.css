@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+/*
+ * Palette is declared twice on purpose:
+ *  - the named tokens are the design spec's own vocabulary
+ *  - the short aliases below are what the Tailwind theme maps to, so every
+ *    project can share the same utility names (bg-card, text-accent, ...)
+ *    while the values stay unique per funnel.
+ */
+:root {
+  --bg-primary: #0D1117;
+  --bg-card: #161B22;
+  --accent-blue: #58A6FF;
+  --accent-gray: #6E7681;
+  --text-primary: #E6EDF3;
+  --text-secondary: #8B949E;
+
+  --bg: var(--bg-primary);
+  --card: var(--bg-card);
+  --elev: #21262D;
+  --ink: var(--text-primary);
+  --muted: var(--text-secondary);
+  --accent: var(--accent-blue);
+  --accent2: var(--accent-gray);
+  --accent3: var(--accent-blue);
+  --line: rgba(110, 118, 129, 0.32);
+
+  --font-display-stack: var(--ff-body), system-ui, -apple-system, sans-serif;
+  --font-body-stack: var(--ff-body), system-ui, -apple-system, sans-serif;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-card: var(--card);
+  --color-elev: var(--elev);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent2: var(--accent2);
+  --color-accent3: var(--accent3);
+  --color-line: var(--line);
+
+  --font-display: var(--font-display-stack);
+  --font-body: var(--font-body-stack);
+}
+
+* {
+  border-color: var(--line);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body-stack);
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+input,
+select,
+button,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+/* Dates and money read better without the browser's default tabular jitter. */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
