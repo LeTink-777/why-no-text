@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: "/",
+        allow: ["/", "/blog"],
         // /result and /thanks are per-visitor pages with no standalone value.
         disallow: ["/result", "/thanks", "/api/"],
       },
